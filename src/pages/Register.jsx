@@ -33,14 +33,21 @@ const Register = () => {
     setAlert({});
 
     try {
-      const response = await axios.post("http://localhost:4000/api/users", {
-        name,
-        password,
-        email,
-      });
-      console.log(response);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users`,
+        {
+          name,
+          password,
+          email,
+        }
+      );
+      setAlert({ msg: data.msg, errors: false });
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRepeatPassword("");
     } catch (error) {
-      console.log(error);
+      setAlert({ msg: error.response.data.msg, error: true });
     }
   };
 
