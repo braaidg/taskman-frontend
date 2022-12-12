@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Alert from "../components/Alert";
@@ -9,11 +10,37 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [alert, setAlert] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if ([name, email, password, repeatPassword].includes("")) {
       setAlert({ msg: "All fields are required", error: true });
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      setAlert({ msg: "Password doesn't match!", error: true });
+      return;
+    }
+
+    if (password.length < 6) {
+      setAlert({
+        msg: "Password too short, minimun length is 6 characters long",
+        error: true,
+      });
+      return;
+    }
+    setAlert({});
+
+    try {
+      const response = await axios.post("http://localhost:4000/api/users", {
+        name,
+        password,
+        email,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
