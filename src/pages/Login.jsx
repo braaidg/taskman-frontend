@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import clientAxios from "../config/clientAxios";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [alert, setAlert] = useState({});
+
+  const { setAuth } = useAuth();
 
   const { email, password } = formData;
 
@@ -28,6 +31,7 @@ const Login = () => {
       });
       setAlert({});
       localStorage.setItem("token", data.token);
+      setAuth(data);
     } catch (error) {
       console.log(error.response.data.msg);
       setAlert({ msg: error.response.data.msg, error: true });
