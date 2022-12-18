@@ -8,7 +8,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [alert, setAlert] = useState({});
 
-  const { setAuth } = useAuth();
+  const { setAuth, auth, loading } = useAuth();
 
   const { email, password } = formData;
 
