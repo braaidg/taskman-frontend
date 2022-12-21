@@ -10,6 +10,28 @@ const ProjectsProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const { data } = await clientAxios("/projects", config);
+        setProjects(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProjects();
+  }, []);
+
   const showAlert = (alert) => {
     setAlert(alert);
 
@@ -30,7 +52,9 @@ const ProjectsProvider = ({ children }) => {
         },
       };
 
-      await clientAxios.post("/projects", project, config);
+      const { data } = await clientAxios.post("/projects", project, config);
+      setProjects([...projects, data]);
+
       setAlert({ msg: "Project successfully created", error: false });
 
       setTimeout(() => {
