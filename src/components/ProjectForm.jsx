@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useProjects from "../hooks/useProjects";
 import Alert from "../components/Alert";
+import { useParams } from "react-router-dom";
 
 const currentDay = new Intl.DateTimeFormat("fr-CA").format();
 
 const ProjectForm = () => {
+  const [id, setId] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [finishDate, setFinishDate] = useState(currentDay);
   const [client, setClient] = useState("");
 
-  const { showAlert, alert, submitProject } = useProjects();
+  const params = useParams();
+
+  const { showAlert, alert, submitProject, project } = useProjects();
+
+  useEffect(() => {
+    if (params.id) {
+      setId(project._id);
+      setName(project.name);
+      setDescription(project.description);
+      setFinishDate(project.finishDate?.split("T")[0]);
+      setClient(project.client);
+    }
+  }, [params]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,8 +33,9 @@ const ProjectForm = () => {
       showAlert({ msg: "All fields are required", error: true });
       return;
     }
-    await submitProject({ name, description, finishDate, client });
+    await submitProject({ id, name, description, finishDate, client });
 
+    setId(null);
     setName("");
     setDescription("");
     setFinishDate("");
@@ -104,7 +119,7 @@ const ProjectForm = () => {
 
       <input
         type="submit"
-        value="Create project"
+        value={id ? "Update project" : "Create project"}
         className="bg-sky-600 w-full p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors"
       />
     </form>
