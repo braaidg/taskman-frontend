@@ -43,6 +43,52 @@ const ProjectsProvider = ({ children }) => {
   };
 
   const submitProject = async (project) => {
+    if (project.id) {
+      await editProject(project);
+    } else {
+      await newProject(project);
+    }
+  };
+
+  const editProject = async (project) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.put(
+        `/projects/${project.id}`,
+        project,
+        config
+      );
+
+      const updatedProjects = projects.map((project) =>
+        project._id === data._id ? data : project
+      );
+
+      setProjects(updatedProjects);
+
+      setAlert({
+        msg: "Project successfully updated",
+        error: false,
+      });
+
+      setTimeout(() => {
+        setAlert({});
+        navigate("/projects");
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const newProject = async (project) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
