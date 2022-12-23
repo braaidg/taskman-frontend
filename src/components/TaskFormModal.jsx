@@ -1,9 +1,36 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useProjects from "../hooks/useProjects";
+import Alert from "../components/Alert";
+import { useParams } from "react-router-dom";
+
+const PRIORITY = ["Low", "Medium", "High"];
+
+const currentDay = new Intl.DateTimeFormat("fr-CA").format();
 
 const TaskFormModal = () => {
-  const { taskFormModal, handleTaskModal } = useProjects();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
+  const [deadline, setDeadline] = useState(currentDay || "");
+
+  const params = useParams();
+
+  const { taskFormModal, handleTaskModal, showAlert, alert, taskSubmit } =
+    useProjects();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if ([name, description, priority, deadline].includes("")) {
+      showAlert({ msg: "All fields are required", error: true });
+      return;
+    }
+
+    taskSubmit({ name, description, priority, deadline, project: params.id });
+  };
+
+  const { msg } = alert;
+
   return (
     <Transition.Root show={taskFormModal} as={Fragment}>
       <Dialog
@@ -69,9 +96,87 @@ const TaskFormModal = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    <h1 className="text-4xl">Title</h1>
+                    Create task
                   </Dialog.Title>
-                  <p>content</p>
+
+                  {msg && <Alert alert={alert} />}
+
+                  <form className="my-10" onSubmit={handleSubmit}>
+                    <div className="mb-5">
+                      <label
+                        htmlFor="name"
+                        className="text-gray-700 font-bold text-sm uppercase"
+                      >
+                        Task name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="Task name"
+                        className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-5">
+                      <label
+                        htmlFor="name"
+                        className="text-gray-700 font-bold text-sm uppercase"
+                      >
+                        Task description
+                      </label>
+                      <textarea
+                        id="description"
+                        placeholder="Task description"
+                        className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        htmlFor="deadline"
+                        className="text-gray-700 font-bold text-sm uppercase"
+                      >
+                        Project deadline
+                      </label>
+                      <input
+                        type="date"
+                        min={currentDay}
+                        id="deadline"
+                        className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={deadline}
+                        onChange={(e) => setDeadline(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        htmlFor="priority"
+                        className="text-gray-700 font-bold text-sm uppercase"
+                      >
+                        Task priority
+                      </label>
+                      <select
+                        type="text"
+                        id="priority"
+                        className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                      >
+                        <option value="">-- Select --</option>
+                        {PRIORITY.map((option) => (
+                          <option key={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <input
+                      type="submit"
+                      className="bg-sky-600 hover:bg-sky-700 text-white w-full p-3 uppercase font-bold cursor-pointer transition-colors rounded text-sm"
+                      value="Create task"
+                    />
+                  </form>
                 </div>
               </div>
             </div>
