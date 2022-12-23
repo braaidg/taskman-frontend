@@ -9,7 +9,7 @@ const ProjectForm = () => {
   const [id, setId] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [finishDate, setFinishDate] = useState(currentDay);
+  const [deadline, setDeadline] = useState(currentDay);
   const [client, setClient] = useState("");
 
   const params = useParams();
@@ -21,7 +21,7 @@ const ProjectForm = () => {
       setId(project._id);
       setName(project.name);
       setDescription(project.description);
-      setFinishDate(project.finishDate?.split("T")[0]);
+      setDeadline(project.deadline?.split("T")[0]);
       setClient(project.client);
     }
   }, [params]);
@@ -29,16 +29,16 @@ const ProjectForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([name, description, finishDate, client].includes("")) {
+    if ([name, description, deadline, client].includes("")) {
       showAlert({ msg: "All fields are required", error: true });
       return;
     }
-    await submitProject({ id, name, description, finishDate, client });
+    await submitProject({ id, name, description, deadline, client });
 
     setId(null);
     setName("");
     setDescription("");
-    setFinishDate("");
+    setDeadline("");
     setClient("");
   };
 
@@ -85,18 +85,18 @@ const ProjectForm = () => {
       </div>
       <div className="mb-5">
         <label
-          htmlFor="finishing-date"
+          htmlFor="deadline"
           className="text-gray-700 uppercase font-bold text-sm"
         >
-          Finishing date
+          Project deadline
         </label>
         <input
-          id="finishing-date"
+          id="deadline"
           type="date"
           min={currentDay}
           className="border w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-          value={finishDate}
-          onChange={(e) => setFinishDate(e.target.value)}
+          value={deadline}
+          onChange={(e) => setDeadline(e.target.value)}
         />
       </div>
 
