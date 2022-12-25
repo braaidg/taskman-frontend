@@ -180,8 +180,14 @@ const ProjectsProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const { data } = await clientAxios.post("/tasks/", task, config);
-      console.log(data);
+      const { data } = await clientAxios.post("/tasks", task, config);
+
+      const updatedProject = { ...project };
+      updatedProject.tasks = [...project.tasks, data];
+
+      setProject(updatedProject);
+      setAlert({});
+      setTaskFormModal(false);
     } catch (error) {
       console.log(error);
     }
