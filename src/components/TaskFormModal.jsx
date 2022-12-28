@@ -6,18 +6,35 @@ import { useParams } from "react-router-dom";
 
 const PRIORITY = ["Low", "Medium", "High"];
 
-const currentDay = new Intl.DateTimeFormat("fr-CA").format();
+const currentDay = new Date().toISOString().split("T")[0];
 
 const TaskFormModal = () => {
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
-  const [deadline, setDeadline] = useState(currentDay || "");
+  const [deadline, setDeadline] = useState("");
+
+  const { taskFormModal, handleTaskModal, showAlert, alert, taskSubmit, task } =
+    useProjects();
 
   const params = useParams();
 
-  const { taskFormModal, handleTaskModal, showAlert, alert, taskSubmit } =
-    useProjects();
+  useEffect(() => {
+    if (task?._id) {
+      setId(task._id);
+      setName(task.name);
+      setDescription(task.description);
+      setDeadline(task.deadline.split("T")[0]);
+      setPriority(task.priority);
+      return;
+    }
+    setId("");
+    setName("");
+    setDescription("");
+    setDeadline("");
+    setPriority("");
+  }, [task]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +44,7 @@ const TaskFormModal = () => {
     }
 
     await taskSubmit({
+      id,
       name,
       description,
       priority,
@@ -106,7 +124,7 @@ const TaskFormModal = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Create task
+                    {id ? "Edit task" : "Create task"}
                   </Dialog.Title>
 
                   {msg && <Alert alert={alert} />}
@@ -184,7 +202,7 @@ const TaskFormModal = () => {
                     <input
                       type="submit"
                       className="bg-sky-600 hover:bg-sky-700 text-white w-full p-3 uppercase font-bold cursor-pointer transition-colors rounded text-sm"
-                      value="Create task"
+                      value={id ? "Save changes" : "Create task"}
                     />
                   </form>
                 </div>
