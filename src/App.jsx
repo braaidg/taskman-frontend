@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,26 +17,34 @@ import EditProject from "./pages/EditProject";
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ProjectsProvider>
-          <Routes>
-            <Route path="/" element={<AuthLayout />}>
-              <Route index element={<Login />} />
-              <Route path="register" element={<Register />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
-              <Route path="forgot-password/:token" element={<NewPassword />} />
-              <Route path="confirm-account/:id" element={<ConfirmAccount />} />
-            </Route>
+      <GoogleOAuthProvider clientId={`${import.meta.env.VITE_OAUTH_GOOGLE}`}>
+        <AuthProvider>
+          <ProjectsProvider>
+            <Routes>
+              <Route path="/" element={<AuthLayout />}>
+                <Route index element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="forgot-password" element={<ForgotPassword />} />
+                <Route
+                  path="forgot-password/:token"
+                  element={<NewPassword />}
+                />
+                <Route
+                  path="confirm-account/:id"
+                  element={<ConfirmAccount />}
+                />
+              </Route>
 
-            <Route path="/projects" element={<ProtectedRoute />}>
-              <Route index element={<Projects />} />
-              <Route path="create-project" element={<NewProject />} />
-              <Route path=":id" element={<Project />} />
-              <Route path="edit/:id" element={<EditProject />} />
-            </Route>
-          </Routes>
-        </ProjectsProvider>
-      </AuthProvider>
+              <Route path="/projects" element={<ProtectedRoute />}>
+                <Route index element={<Projects />} />
+                <Route path="create-project" element={<NewProject />} />
+                <Route path=":id" element={<Project />} />
+                <Route path="edit/:id" element={<EditProject />} />
+              </Route>
+            </Routes>
+          </ProjectsProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </BrowserRouter>
   );
 }

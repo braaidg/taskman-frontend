@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import clientAxios from "../config/clientAxios";
@@ -33,9 +34,21 @@ const Login = () => {
       setAlert({});
       localStorage.setItem("token", data.token);
       setAuth(data);
-      navigate("/projects");
+      window.location.reload();
     } catch (error) {
       console.log(error.response.data.msg);
+      setAlert({ msg: error.response.data.msg, error: true });
+    }
+  };
+
+  const handleGoogleLogin = async (response) => {
+    try {
+      const { data } = await clientAxios.post("/users/googleAuth", response);
+      setAlert({});
+      localStorage.setItem("token", data.token);
+      setAuth(data);
+      window.location.reload();
+    } catch (error) {
       setAlert({ msg: error.response.data.msg, error: true });
     }
   };
@@ -88,11 +101,18 @@ const Login = () => {
             className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
           />
         </div>
-
         <input
           type="submit"
           value="Log in"
           className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
+        />
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            handleGoogleLogin(credentialResponse);
+          }}
+          onError={() => {
+            console.log("Login Failed");
+          }}
         />
       </form>
       <nav className="lg:flex lg:justify-between">
