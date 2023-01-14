@@ -4,7 +4,7 @@ import useProjects from "../hooks/useProjects";
 const Task = ({ task }) => {
   const { description, name, priority, deadline, state, _id } = task;
 
-  const { handleTaskEditModal } = useProjects();
+  const { handleTaskEditModal, handleTaskDeleteModal } = useProjects();
   return (
     <div className="border-b p-5 flex justify-between items-center">
       <div>
@@ -30,7 +30,10 @@ const Task = ({ task }) => {
             Incomplete
           </button>
         )}
-        <button className="bg-red-600 px-4 py-3 text-white font-bold uppercase rounded-lg">
+        <button
+          className="bg-red-600 px-4 py-3 text-white font-bold uppercase rounded-lg"
+          onClick={() => handleTaskDeleteModal(task)}
+        >
           Delete
         </button>
       </div>
