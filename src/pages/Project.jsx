@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import Alert from "../components/Alert";
 import Task from "../components/Task";
 import TaskDeleteModal from "../components/TaskDeleteModal";
 import TaskFormModal from "../components/TaskFormModal";
@@ -7,13 +8,16 @@ import useProjects from "../hooks/useProjects";
 
 const Project = () => {
   const params = useParams();
-  const { getProject, project, loading, handleTaskModal } = useProjects();
+  const { getProject, project, loading, handleTaskModal, alert } =
+    useProjects();
 
   const { name } = project;
 
   useEffect(() => {
     getProject(params.id);
   }, []);
+
+  const { msg } = alert;
 
   return loading ? (
     "Loading ..."
@@ -68,6 +72,12 @@ const Project = () => {
       </button>
 
       <p className="font-bold text-xl mt-10">Project Tasks</p>
+
+      <div className=" flex justify-center">
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          {msg && <Alert alert={alert} />}
+        </div>
+      </div>
 
       <div className="bg-white shadow mt-10 rounded-lg">
         {project.tasks?.length ? (
