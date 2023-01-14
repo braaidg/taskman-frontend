@@ -239,6 +239,37 @@ const ProjectsProvider = ({ children }) => {
     setTaskDeleteModal(!taskDeleteModal);
   };
 
+  const deleteTask = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clientAxios.delete(`/tasks/${task._id}`, config);
+      setAlert({
+        msg: data.msg,
+        error: false,
+      });
+      const updatedProject = { ...project };
+      updatedProject.tasks = updatedProject.tasks.filter(
+        (currentTask) => currentTask._id !== task._id
+      );
+      setProject(updatedProject);
+      setTaskDeleteModal(false);
+      setTask({});
+      setTimeout(() => {
+        setAlert({});
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -257,6 +288,7 @@ const ProjectsProvider = ({ children }) => {
         task,
         taskDeleteModal,
         handleTaskDeleteModal,
+        deleteTask,
       }}
     >
       {children}
