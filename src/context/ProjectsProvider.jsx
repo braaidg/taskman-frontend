@@ -12,6 +12,7 @@ const ProjectsProvider = ({ children }) => {
   const [taskFormModal, setTaskFormModal] = useState(false);
   const [taskDeleteModal, setTaskDeleteModal] = useState(false);
   const [task, setTask] = useState({});
+  const [collaborator, setCollaborator] = useState({});
 
   const navigate = useNavigate();
 
@@ -271,7 +272,30 @@ const ProjectsProvider = ({ children }) => {
   };
 
   const submitCollaborator = async (email) => {
-    console.log(email);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.post(
+        "/projects/collaborators",
+        { email },
+        config
+      );
+      setCollaborator(data);
+      setAlert({});
+    } catch (error) {
+      setAlert({ msg: error.response.data.msg, error: true });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
