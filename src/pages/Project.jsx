@@ -25,9 +25,7 @@ const Project = () => {
 
   const { msg } = alert;
 
-  return msg && alert.error ? (
-    <Alert alert={alert} />
-  ) : (
+  return (
     <>
       <div className="flex justify-between">
         <h1 className="font-black text-4xl">{name}</h1>
