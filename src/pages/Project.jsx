@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Alert from "../components/Alert";
 import Collaborator from "../components/Collaborator";
+import CollaboratorDeleteModal from "../components/CollaboratorDeleteModal";
 import Task from "../components/Task";
 import TaskDeleteModal from "../components/TaskDeleteModal";
 import TaskFormModal from "../components/TaskFormModal";
@@ -112,6 +113,7 @@ const Project = () => {
 
       <TaskFormModal />
       <TaskDeleteModal />
+      <CollaboratorDeleteModal />
     </>
   );
 };
