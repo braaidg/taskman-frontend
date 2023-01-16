@@ -1,12 +1,18 @@
+import Alert from "../components/Alert";
 import PreviewProject from "../components/PreviewProject";
 import useProjects from "../hooks/useProjects";
 
 const Projects = () => {
-  const { projects } = useProjects();
+  const { projects, alert } = useProjects();
+
+  const { msg } = alert;
 
   return (
     <>
       <h1 className="text-4xl font-black">Projects</h1>
+
+      {msg && <Alert alert={alert} />}
+
       <div className="bg-white shadow mt-10 rounded-lg">
         {projects.length ? (
           projects.map((project) => (
