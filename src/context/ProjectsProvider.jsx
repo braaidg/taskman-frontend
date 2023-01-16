@@ -367,6 +367,30 @@ const ProjectsProvider = ({ children }) => {
     }
   };
 
+  const completeTask = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clientAxios.post(`/tasks/state/${id}`, {}, config);
+      const updatedProject = { ...project };
+      updatedProject.tasks = updatedProject.tasks.map((projectTask) =>
+        projectTask._id === data._id ? data : projectTask
+      );
+      setProject(updatedProject);
+      setTask({});
+      setAlert({});
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -392,6 +416,7 @@ const ProjectsProvider = ({ children }) => {
         handleDeleteCollabModal,
         deleteCollabModal,
         deleteCollaborator,
+        completeTask,
       }}
     >
       {children}
