@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Alert from "../components/Alert";
+import Collaborator from "../components/Collaborator";
 import Task from "../components/Task";
 import TaskDeleteModal from "../components/TaskDeleteModal";
 import TaskFormModal from "../components/TaskFormModal";
@@ -95,6 +96,18 @@ const Project = () => {
         >
           Add
         </Link>
+      </div>
+
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {project.collaborators?.length ? (
+          project.collaborators?.map((collab) => (
+            <Collaborator key={collab._id} collab={collab} />
+          ))
+        ) : (
+          <p className="text-center my-5 p-10">
+            No collaborator found on this project
+          </p>
+        )}
       </div>
 
       <TaskFormModal />
