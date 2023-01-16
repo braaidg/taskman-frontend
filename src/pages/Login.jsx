@@ -36,7 +36,6 @@ const Login = () => {
       setAuth(data);
       window.location.reload();
     } catch (error) {
-      console.log(error.response.data.msg);
       setAlert({ msg: error.response.data.msg, error: true });
     }
   };
