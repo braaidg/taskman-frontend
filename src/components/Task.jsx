@@ -5,7 +5,8 @@ import useProjects from "../hooks/useProjects";
 const Task = ({ task }) => {
   const { description, name, priority, deadline, state, _id } = task;
 
-  const { handleTaskEditModal, handleTaskDeleteModal } = useProjects();
+  const { handleTaskEditModal, handleTaskDeleteModal, completeTask } =
+    useProjects();
   const admin = useAdmin();
 
   return (
@@ -26,15 +27,15 @@ const Task = ({ task }) => {
             Edit
           </button>
         )}
-        {state ? (
-          <button className="bg-sky-600 px-4 py-3 text-white font-bold uppercase rounded-lg">
-            Complete
-          </button>
-        ) : (
-          <button className="bg-gray-600 px-4 py-3 text-white font-bold uppercase rounded-lg">
-            Incomplete
-          </button>
-        )}
+        <button
+          className={` ${
+            state ? "bg-sky-600" : "bg-gray-600"
+          } px-4 py-3 text-white font-bold uppercase rounded-lg`}
+          onClick={() => completeTask(_id)}
+        >
+          {state ? "Completed" : "Incomplete"}
+        </button>
+
         {admin && (
           <button
             className="bg-red-600 px-4 py-3 text-white font-bold uppercase rounded-lg"
