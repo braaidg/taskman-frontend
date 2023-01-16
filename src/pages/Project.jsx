@@ -19,10 +19,12 @@ const Project = () => {
     getProject(params.id);
   }, []);
 
+  if (loading) return "Loading...";
+
   const { msg } = alert;
 
-  return loading ? (
-    "Loading ..."
+  return msg && alert.error ? (
+    <Alert alert={alert} />
   ) : (
     <>
       <div className="flex justify-between">
