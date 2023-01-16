@@ -13,6 +13,7 @@ const ProjectsProvider = ({ children }) => {
   const [taskDeleteModal, setTaskDeleteModal] = useState(false);
   const [task, setTask] = useState({});
   const [collaborator, setCollaborator] = useState({});
+  const [deleteCollabModal, setDeleteCollabModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -317,9 +318,51 @@ const ProjectsProvider = ({ children }) => {
       );
       setAlert({ msg: data.msg, error: false });
       setCollaborator({});
-      setAlert({});
+      setTimeout(() => {
+        setAlert({});
+      }, 3000);
     } catch (error) {
       setAlert({ msg: error.response.data.msg, error: true });
+    }
+  };
+
+  const handleDeleteCollabModal = (collaborator) => {
+    setDeleteCollabModal(!deleteCollabModal);
+    setCollaborator(collaborator);
+  };
+
+  const deleteCollaborator = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.post(
+        `/projects/delete-collaborator/${project._id}`,
+        { id: collaborator._id },
+        config
+      );
+
+      const updatedProject = { ...project };
+      updatedProject.collaborators = updatedProject.collaborators.filter(
+        (collab) => collab._id !== collaborator._id
+      );
+      setProject(updatedProject);
+
+      setAlert({ msg: data.msg, error: false });
+      setCollaborator({});
+      setDeleteCollabModal(false);
+      setTimeout(() => {
+        setAlert({});
+      }, 3000);
+    } catch (error) {
+      console.log(error.response);
     }
   };
 
@@ -345,6 +388,10 @@ const ProjectsProvider = ({ children }) => {
         submitCollaborator,
         collaborator,
         addCollaborator,
+        handleDeleteCollabModal,
+        deleteCollabModal,
+        collaborator,
+        deleteCollaborator,
       }}
     >
       {children}
