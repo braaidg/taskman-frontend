@@ -34,7 +34,6 @@ const Login = () => {
       setAlert({});
       localStorage.setItem("token", data.token);
       setAuth(data);
-      window.location.reload();
     } catch (error) {
       setAlert({ msg: error.response.data.msg, error: true });
     }
