@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import useProjects from "../hooks/useProjects";
 import Search from "./Search";
 
 const Header = () => {
-  const { handleSearch } = useProjects();
+  const { handleSearch, logoutProjectSession } = useProjects();
+  const { logoutUserSession } = useAuth();
+
+  const handleLogOut = () => {
+    logoutProjectSession();
+    logoutUserSession();
+    localStorage.removeItem("token");
+  };
 
   return (
     <header className="py-5 px-4 bg-white border-b">
@@ -26,6 +34,7 @@ const Header = () => {
           <button
             type="button"
             className="text-white text-sm bg-sky-600 p-3 rounded-md uppercase font-bold"
+            onClick={handleLogOut}
           >
             Log out
           </button>
