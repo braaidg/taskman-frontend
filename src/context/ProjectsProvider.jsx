@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import clientAxios from "../config/clientAxios";
+import useAuth from "../hooks/useAuth";
 
 const ProjectsContext = createContext();
 
@@ -15,6 +16,8 @@ const ProjectsProvider = ({ children }) => {
   const [collaborator, setCollaborator] = useState({});
   const [deleteCollabModal, setDeleteCollabModal] = useState(false);
   const [search, setSearch] = useState(false);
+
+  const { auth } = useAuth();
 
   const navigate = useNavigate();
 
@@ -38,7 +41,7 @@ const ProjectsProvider = ({ children }) => {
       }
     };
     getProjects();
-  }, []);
+  }, [auth]);
 
   const showAlert = (alert) => {
     setAlert(alert);
@@ -400,6 +403,12 @@ const ProjectsProvider = ({ children }) => {
     setSearch(!search);
   };
 
+  const logoutProjectSession = () => {
+    setProjects([]);
+    setProject({});
+    setAlert({});
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -428,6 +437,7 @@ const ProjectsProvider = ({ children }) => {
         completeTask,
         handleSearch,
         search,
+        logoutProjectSession,
       }}
     >
       {children}
