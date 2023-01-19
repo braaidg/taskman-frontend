@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import clientAxios from "../config/clientAxios";
 
@@ -9,6 +9,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [alert, setAlert] = useState({});
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +45,9 @@ const Register = () => {
       setEmail("");
       setPassword("");
       setRepeatPassword("");
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
       setAlert({ msg: error.response.data.msg, error: true });
     }
