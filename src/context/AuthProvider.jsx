@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
     };
 
     authenticateUser();
-  }, [auth]);
+  }, []);
 
   const logoutUserSession = () => {
     setAuth({});
