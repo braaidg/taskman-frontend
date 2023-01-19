@@ -14,7 +14,6 @@ import NewProject from "./pages/NewProject";
 import Project from "./pages/Project";
 import EditProject from "./pages/EditProject";
 import NewCollaborator from "./pages/NewCollaborator";
-import Error404 from "./pages/Error404";
 
 function App() {
   return (
@@ -47,7 +46,6 @@ function App() {
                 <Route path=":id" element={<Project />} />
                 <Route path="edit/:id" element={<EditProject />} />
               </Route>
-              <Route path="*" element={<Error404 />} />
             </Routes>
           </ProjectsProvider>
         </AuthProvider>
